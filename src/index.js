@@ -7,6 +7,8 @@ const morgan = require('morgan');
 const app = express();
 const port = 3000;
 
+const route = require('./routes');
+
 //Static file
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -25,19 +27,9 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
 
-app.get('/trang-chu', (req, res) => {
-  res.render('home');
-});
+route(app);
 
-app.get('/news', (req, res) => {
-  res.render('news');
-});
-app.get('/search', (req, res) => {
-  res.render('search');
-});
-app.post('/news', (req, res) => {
-  res.render('search');
-});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 });
