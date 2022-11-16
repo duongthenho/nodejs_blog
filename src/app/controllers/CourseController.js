@@ -3,8 +3,9 @@ const {
     mutipleMongooseToObject,
     mongooseToObject,
 } = require('../../util/mongoose');
+const { query } = require('express');
 class CourseController {
-    //[GET] show
+    //[GET] courses/show
     show(req, res, next) {
         Course.findOne({ slug: req.params.slug })
             .then((course) => {
@@ -14,9 +15,18 @@ class CourseController {
             })
             .catch(next);
     }
-    //[GET] create
+    //[GET] courses/create
     create(req, res, next) {
         res.render('courses/create');
+    }
+    //[GET] courses/{id}/edit
+    edit(req, res, next) {
+        Course.findById(req.params.id)
+            .then((course => {
+                res.render('courses/edit', course);
+            }))
+            .catch(next);
+
     }
     //[POST] store
     store(req, res, next) {
@@ -26,7 +36,13 @@ class CourseController {
         const course = new Course(formData);
         course.save().then(() => {
             res.redirect('/');
-        });
+        }).catch(next);
+    }
+    //[PUT] /courses/:id
+    update(req, res, next) {
+        Course.updateOne({ _id: req.params.id }, req.body)
+            .then(() => res.redirect("/me/stored/courses"))
+            .catch(next);
     }
 }
 
